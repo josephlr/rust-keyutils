@@ -24,121 +24,168 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-use crate::{KeyPermissions, KeyringSerial, TimeoutSeconds};
+use std::ffi::{CStr, CString};
+use std::io::Result;
 
-#[rustfmt::skip]
-extern "C" {
-    pub fn add_key(
-        type_:          *const libc::c_char,
-        description:    *const libc::c_char,
-        payload:        *const libc::c_void,
-        plen:           libc::size_t,
-        keyring:        KeyringSerial)
-        -> KeyringSerial;
-    pub fn request_key(
-        type_:          *const libc::c_char,
-        description:    *const libc::c_char,
-        callout_info:   *const libc::c_char,
-        keyring:        Option<KeyringSerial>)
-        -> KeyringSerial;
+use crate::{KeyringSerial, KeyPermissions, DefaultKeyring, TimeoutSeconds};
+use libc::{gid_t, uid_t};
 
-    pub fn keyctl_get_keyring_ID(
-        id:     KeyringSerial,
-        create: libc::c_int)
-        -> KeyringSerial;
-    pub fn keyctl_join_session_keyring(
-        name:   *const libc::c_char)
-        -> KeyringSerial;
-    pub fn keyctl_update(
-        id:         KeyringSerial,
-        payload:    *const libc::c_void,
-        plen:       libc::size_t)
-        -> libc::c_long;
-    pub fn keyctl_revoke(
-        id: KeyringSerial)
-        -> libc::c_long;
-    pub fn keyctl_chown(
-        id:     KeyringSerial,
-        uid:    libc::uid_t,
-        gid:    libc::gid_t)
-        -> libc::c_long;
-    pub fn keyctl_setperm(
-        id:     KeyringSerial,
-        perm:   KeyPermissions)
-        -> libc::c_long;
-    pub fn keyctl_describe(
-        id:     KeyringSerial,
-        buffer: *mut libc::c_char,
-        buflen: libc::size_t)
-        -> libc::c_long;
-    pub fn keyctl_clear(
-        ringid: KeyringSerial)
-        -> libc::c_long;
-    pub fn keyctl_link(
-        id:     KeyringSerial,
-        ringid: KeyringSerial)
-        -> libc::c_long;
-    pub fn keyctl_unlink(
-        id:     KeyringSerial,
-        ringid: KeyringSerial)
-        -> libc::c_long;
-    pub fn keyctl_search(
-        ringid:         KeyringSerial,
-        type_:          *const libc::c_char,
-        description:    *const libc::c_char,
-        destringid:     KeyringSerial)
-        -> libc::c_long;
-    pub fn keyctl_read(
-        id:     KeyringSerial,
-        buffer: *mut libc::c_char,
-        buflen: libc::size_t)
-        -> libc::c_long;
-    pub fn keyctl_instantiate(
-        id:         KeyringSerial,
-        payload:    *const libc::c_void,
-        plen:       libc::size_t,
-        ringid:     KeyringSerial)
-        -> libc::c_long;
-    pub fn keyctl_negate(
-        id:         KeyringSerial,
-        timeout:    TimeoutSeconds,
-        ringid:     KeyringSerial)
-        -> libc::c_long;
-    pub fn keyctl_set_reqkey_keyring(
-        reqkey_defl:    libc::c_int)
-        -> libc::c_long;
-    pub fn keyctl_set_timeout(
-        key:        KeyringSerial,
-        timeout:    TimeoutSeconds)
-        -> libc::c_long;
-    pub fn keyctl_assume_authority(
-        key:    Option<KeyringSerial>)
-        -> libc::c_long;
-    pub fn keyctl_get_security(
-        key:    KeyringSerial,
-        buffer: *mut libc::c_char,
-        buflen: libc::size_t)
-        -> libc::c_long;
-    //pub fn keyctl_session_to_parent()
-    //    -> libc::c_long;
-    pub fn keyctl_reject(
-        id:         KeyringSerial,
-        timeout:    TimeoutSeconds,
-        error:      libc::c_uint,
-        ringid:     KeyringSerial)
-        -> libc::c_long;
-    pub fn keyctl_invalidate(
-        id: KeyringSerial)
-        -> libc::c_long;
-    pub fn keyctl_get_persistent(
-        uid:    libc::uid_t,
-        id:     KeyringSerial)
-        -> libc::c_long;
-    pub fn keyctl_dh_compute(
-        private:    KeyringSerial,
-        prime:      KeyringSerial,
-        base:       KeyringSerial,
-        buffer:     *mut libc::c_char,
-        buflen:     libc::size_t)
-        -> libc::c_long;
+// TODO, when can optional be passed
+
+pub fn add_key(
+    type_: &CStr,
+    description: &CStr,
+    payload: &[u8],
+    keyring: KeyringSerial,
+) -> Result<KeyringSerial> {
+    unimplemented!()
+}
+
+pub fn request_key(
+    type_: &CStr,
+    description: &CStr,
+    callout_info: Option<&CStr>,
+    keyring: Option<KeyringSerial>,
+) -> Result<KeyringSerial> {
+    unimplemented!()
+}
+
+pub fn keyctl_get_keyring_id(id: KeyringSerial, create: bool) -> Result<KeyringSerial> {
+    unimplemented!()
+}
+
+pub fn keyctl_join_session_keyring(name: Option<&CStr>) -> Result<KeyringSerial> {
+    unimplemented!()
+}
+
+pub fn keyctl_update(id: KeyringSerial, payload: &[u8]) -> Result<()> {
+    unimplemented!()
+}
+
+pub fn keyctl_revoke(id: KeyringSerial) -> Result<()> {
+    unimplemented!()
+}
+
+pub fn keyctl_chown(id: KeyringSerial, uid: uid_t, gid: gid_t) -> Result<()> {
+    unimplemented!()
+}
+
+pub fn keyctl_setperm(id: KeyringSerial, perm: KeyPermissions) -> Result<()> {
+    unimplemented!()
+}
+
+pub fn keyctl_describe(id: KeyringSerial, buffer: &[u8]) -> Result<usize> {
+    unimplemented!()
+}
+
+pub fn keyctl_describe_alloc(id: KeyringSerial) -> Result<CString> {
+    unimplemented!()
+}
+
+pub fn keyctl_clear(ringid: KeyringSerial) -> Result<()> {
+    unimplemented!()
+}
+
+pub fn keyctl_link(id: KeyringSerial, ringid: KeyringSerial) -> Result<()> {
+    unimplemented!()
+}
+
+pub fn keyctl_unlink(id: KeyringSerial, ringid: KeyringSerial) -> Result<()> {
+    unimplemented!()
+}
+
+pub fn keyctl_search(
+    ringid: KeyringSerial,
+    type_: &CStr,
+    description: &CStr,
+    destringid: KeyringSerial,
+) -> Result<KeyringSerial> {
+    unimplemented!()
+}
+
+pub fn keyctl_read(id: KeyringSerial, buffer: &[u8]) -> Result<usize> {
+    unimplemented!()
+}
+
+pub fn keyctl_read_alloc(id: KeyringSerial) -> Result<Vec<u8>> {
+    unimplemented!()
+}
+
+pub fn keyctl_instantiate(id: KeyringSerial, payload: &[u8], ringid: KeyringSerial) -> Result<()> {
+    unimplemented!()
+}
+
+pub fn keyctl_negate(
+    id: KeyringSerial,
+    timeout: TimeoutSeconds,
+    ringid: KeyringSerial,
+) -> Result<()> {
+    unimplemented!()
+}
+
+pub fn keyctl_set_reqkey_keyring(reqkey_defl: DefaultKeyring) -> Result<DefaultKeyring> {
+    unimplemented!()
+}
+
+pub fn keyctl_set_timeout(key: KeyringSerial, timeout: TimeoutSeconds) -> Result<()> {
+    unimplemented!()
+}
+
+pub fn keyctl_assume_authority(key: Option<KeyringSerial>) -> Result<Option<KeyringSerial>> {
+    unimplemented!()
+}
+
+pub fn keyctl_get_security(key: KeyringSerial, buffer: &[u8]) -> Result<usize> {
+    unimplemented!()
+}
+
+pub fn keyctl_get_security_alloc(key: KeyringSerial) -> Result<CString> {
+    unimplemented!()
+}
+
+pub fn keyctl_session_to_parent() -> Result<()> {
+    unimplemented!()
+}
+
+// No fallback
+pub fn keyctl_reject(
+    key: KeyringSerial,
+    timeout: TimeoutSeconds,
+    error: i32,
+    keyring: KeyringSerial,
+) -> Result<()> {
+    unimplemented!()
+}
+
+// No fallback
+pub fn keyctl_instantiate_iov(
+    key: KeyringSerial,
+    payload: &[&[u8]],
+    keyring: KeyringSerial,
+) -> Result<()> {
+    unimplemented!()
+}
+
+pub fn keyctl_invalidate(key: KeyringSerial) -> Result<()> {
+    unimplemented!()
+}
+
+pub fn keyctl_get_persistent(uid: uid_t, keyring: KeyringSerial) -> Result<KeyringSerial> {
+    unimplemented!()
+}
+
+// pub fn keyctl_dh_compute(dh: &DHParams, buffer: &[u8], kdf: Option<KDFParams>) -> Result<usize> {
+//     unimplemented!()
+// }
+
+// pub fn keyctl_dh_compute_alloc(dh: &DHParams, kdf: Option<KDFParams>) -> Result<Vec<u8>> {
+//     unimplemented!()
+// }
+
+pub fn keyctl_restrict_keyring(
+    keyring: KeyringSerial,
+    type_: Option<&CStr>,
+    restriction: Option<&CStr>,
+) -> Result<()> {
+    unimplemented!()
 }
